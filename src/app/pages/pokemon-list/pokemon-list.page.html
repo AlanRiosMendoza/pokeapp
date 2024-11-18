@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Pokémon List</ion-title>
+    <ion-searchbar placeholder="Input a Pokémon" (ionInput)="onSearchChange($event)"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Lista de todos los Pokémon -->
+  <ion-list *ngIf="!search && !loading">
+    <ion-item *ngFor="let pokemon of pokemons">
+      <ion-label>{{ pokemon.name | titlecase }}</ion-label>
+      <a [href]="pokemon.url"><ion-label>{{ pokemon.url }}</ion-label></a>
+    </ion-item>
+  </ion-list>
+
+  <!-- Resultados de la búsqueda -->
+  <ion-list *ngIf="search && !loading">
+    <ion-card *ngFor="let pokemon of pokemons">
+      <!-- Imagen del Pokémon -->
+      <img 
+        alt="{{ pokemon.name }}" 
+        [src]="pokemon.sprites?.other['official-artwork']?.front_default || 'assets/default-pokemon.png'" 
+      />
+  
+      <!-- Título y Región -->
+      <ion-card-header>
+        <ion-card-title>{{ pokemon.name | titlecase }}</ion-card-title>
+        <ion-card-subtitle>
+          Region: {{ pokemon.region?.name ? (pokemon.region.name | titlecase) : 'Unknown' }}
+        </ion-card-subtitle>
+      </ion-card-header>
+  
+      <!-- Lista de Habilidades -->
+      <ion-card-content>
+        <h3>Abilities</h3>
+        <ol>
+          <li *ngFor="let ability of pokemon.abilities">
+            {{ ability.ability.name | titlecase }}
+          </li>
+        </ol>
+      </ion-card-content>
+      <ion-card-content>
+        <h3>Types</h3>
+        <ol>
+          <li *ngFor="let type of pokemon.types">
+            {{ type.type.name | titlecase }}
+          </li>
+        </ol>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+
+  <!-- Spinner de carga -->
+  <ion-spinner *ngIf="loading" class="loading-spinner"></ion-spinner>
+</ion-content>
